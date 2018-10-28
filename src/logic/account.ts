@@ -1,8 +1,10 @@
+import * as bs58check from 'bs58check';
 import * as crypto from 'crypto';
 import * as filterObject from 'filter-object';
 import * as fs from 'fs';
 import { inject, injectable } from 'inversify';
 import * as path from 'path';
+import * as RIPEMD160 from 'ripemd160';
 import * as sequelize from 'sequelize';
 import { Op } from 'sequelize';
 import * as z_schema from 'z-schema';
@@ -11,9 +13,7 @@ import { IAccountLogic } from '../ioc/interfaces/';
 import { Symbols } from '../ioc/symbols';
 import {
   Accounts2DelegatesModel,
-  Accounts2MultisignaturesModel,
   Accounts2U_DelegatesModel,
-  Accounts2U_MultisignaturesModel,
   AccountsModel,
   RoundsModel
 } from '../models/';
@@ -23,7 +23,6 @@ import { accountsModelCreator } from './models/account';
 import { IModelField, IModelFilter } from './models/modelField';
 
 import { AccountDiffType } from '../ioc/interfaces/logic';
-import { RunThroughExceptions } from '../helpers/decorators/exceptions';
 
 // tslint:disable-next-line
 export type OptionalsMemAccounts = {
@@ -132,14 +131,9 @@ export class AccountLogic implements IAccountLogic {
 
   @inject(Symbols.models.accounts2Delegates)
   private Accounts2DelegatesModel: typeof Accounts2DelegatesModel;
-  @inject(Symbols.models.accounts2Multisignatures)
-  private Accounts2MultisignaturesModel: typeof Accounts2MultisignaturesModel;
   @inject(Symbols.models.accounts2U_Delegates)
   // tslint:disable-next-line
   private Accounts2U_DelegatesModel: typeof Accounts2U_DelegatesModel;
-  @inject(Symbols.models.accounts2U_Multisignatures)
-  // tslint:disable-next-line
-  private Accounts2U_MultisignaturesModel: typeof Accounts2U_MultisignaturesModel;
   @inject(Symbols.models.accounts)
   private AccountsModel: typeof AccountsModel;
   @inject(Symbols.models.rounds)
@@ -205,9 +199,8 @@ export class AccountLogic implements IAccountLogic {
       this.AccountsModel,
       this.RoundsModel,
       this.Accounts2DelegatesModel,
-      this.Accounts2MultisignaturesModel,
-      this.Accounts2U_DelegatesModel,
-      this.Accounts2U_MultisignaturesModel];
+      this.Accounts2U_DelegatesModel
+    ];
     for (const model of models) {
       await model.drop({cascade: true})
         .catch(catchToLoggerAndRemapError('Account#removeTables error', this.logger));
@@ -427,12 +420,7 @@ export class AccountLogic implements IAccountLogic {
         : new Buffer(publicKey, 'hex')
       )
       .digest();
-
-    const tmp = Buffer.alloc(8);
-    for (let i = 0; i < 8; i++) {
-      tmp[i] = hash[7 - i];
-    }
-    return `${BigNum.fromBuffer(tmp).toString()}${this.constants.addressSuffix}`;
+    return `BBN${bs58check.encode(new RIPEMD160().update(hash).digest())}`;
   }
 
   public assertValidAddress(address: string): void {

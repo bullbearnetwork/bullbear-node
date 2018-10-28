@@ -7,6 +7,5 @@ export const requestSymbols = {
   peersList       : Symbol.for('peersList'),
   ping            : Symbol.for('ping'),
   postBlocks      : Symbol.for('postBlocks'),
-  postSignatures  : Symbol.for('postSignatures'),
   postTransactions: Symbol.for('postTransactions'),
 };

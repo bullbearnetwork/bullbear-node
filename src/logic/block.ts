@@ -1,7 +1,9 @@
+import * as bs58check from 'bs58check';
 import * as ByteBuffer from 'bytebuffer';
 import * as crypto from 'crypto';
 import * as filterObject from 'filter-object';
 import { inject, injectable } from 'inversify';
+import * as RIPEMD160 from 'ripemd160';
 import z_schema from 'z-schema';
 import { BigNum, constants, Ed, IKeypair } from '../helpers/';
 import {IAccountLogic, IBlockLogic, ITransactionLogic} from '../ioc/interfaces/logic/';
@@ -419,11 +421,7 @@ export class BlockLogic implements IBlockLogic {
 
   private getIdFromBytes(bytes: Buffer): string {
     const hash = crypto.createHash('sha256').update(bytes).digest();
-    const temp = Buffer.alloc(8);
-    for (let i = 0; i < 8; i++) {
-      temp[i] = hash[7 - i];
-    }
-    return BigNum.fromBuffer(temp).toString();
+    return bs58check.encode(new RIPEMD160().update(hash).digest());
   }
 
 }

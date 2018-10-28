@@ -180,13 +180,7 @@ export class SystemModule implements ISystemModule {
   }
 
   public getFees(height: number = this.blocksModule.lastBlock.height + 1): {
-    fees: {
-      send: number,
-      vote: number,
-      secondsignature: number,
-      delegate: number,
-      multisignature: number,
-    }, fromHeight: number, height: number, toHeight: number
+    fees: {[k: string]: number}, fromHeight: number, height: number, toHeight: number
   } {
 
     let i;

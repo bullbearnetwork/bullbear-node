@@ -41,31 +41,27 @@
  * @property {number} unconfirmedTransactionTimeOut - 1080 blocks
  */
 export default {
-  activeDelegates              : 101,
-  maximumVotes                 : 1,
-  maxVotesPerTransaction       : 2,
+  activeDelegates              : 41,
+  maximumVotes                 : 11,
+  maxVotesPerTransaction       : 22,
   addressLength                : 208,
   blockHeaderLength            : 248,
   blockSlotWindow              : 5, // window of which a slot could be accepted.
-  blockTime                    : 30,
-  blockReceiptTimeOut          : 30 * 2, // 2 blocks
+  blockTime                    : 15,
+  blockReceiptTimeOut          : 15 * 2, // 2 blocks
   confirmationLength           : 77,
-  addressSuffix                : 'R',
-  epochTime                    : new Date(Date.UTC(2016, 4, 24, 17, 0, 0, 0)),
+  addressSuffix                : 'BBN',
+  epochTime                    : new Date(Date.UTC(2018, 9, 1, 0, 0, 0, 0)),
   minVersion                   : [
-    { height: 1, ver: '>=0.1.0' },
-    { height: 241000, ver: '>=0.1.1' },
-    { height: 826500,  ver: '>=0.1.2' },
   ],
   fees                         : [
     {
       height: 1,
       fees  : {
-        send           : 10000000,
-        vote           : 100000000,
-        secondsignature: 500000000,
-        delegate       : 2500000000,
-        multisignature : 500000000,
+        send           :    100000,
+        secondsignature:  50000000,
+        delegate       : 500000000,
+        vote           :  10000000,
       },
     },
   ],
@@ -85,26 +81,23 @@ export default {
   minBroadhashConsensus        : 51,
   nethashes                    : [
     // Mainnet
-    'cd8171332c012514864edd8eb6f68fc3ea6cb2afbaf21c56e12751022684cea5',
+    'a7594caee74706f85193f1848f099fe3d939e87169437fb506b7a30ebe987565',
     // Testnet
     'e90d39ac200c495b97deb6d9700745177c7fc4aa80a404108ec820cbeced054c',
   ],
   numberLength                 : 100000000,
   requestLength                : 104,
   rewards                      : [
-    { height: 1, reward: 0 },
-    { height: 10, reward: 1500000000 },
-    { height: 11, reward: 30000000 },
-    { height: 12, reward: 20000000 },
-    { height: 13, reward: 1500000000 },
-    { height: 1054080, reward: 1200000000 },
-    { height: 1054080 * 2, reward: 900000000 },
-    { height: 1054080 * 3, reward: 600000000 },
-    { height: 1054080 * 4, reward: 300000000 },
-    { height: 1054080 * 5, reward: 100000000 },
+    { height: 1,           reward: 0         },
+    { height: 2,           reward: 210000000 }, // 1st year
+    { height: 2102400,     reward: 160000000 }, // 2nd year
+    { height: 2102400 * 2, reward: 110000000 }, // 3rd year
+    { height: 2102400 * 3, reward: 80000000  }, // 4th year
+    { height: 2102400 * 4, reward: 70000000  }, // 5th year
+    { height: 2102400 * 5, reward: 50000000  }, // 6th year
   ],
   signatureLength              : 196,
-  totalAmount                  : 10999999991000000,
+  totalAmount                  : 3000000000000000,
   unconfirmedTransactionTimeOut: 10800, // 1080 blocks
   multisigConstraints          : {
     min      : {

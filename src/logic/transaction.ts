@@ -1,8 +1,10 @@
 import { BigNumber } from 'bignumber.js';
+import * as bs58check from 'bs58check';
 import * as ByteBuffer from 'bytebuffer';
 import * as crypto from 'crypto';
 import { inject, injectable } from 'inversify';
 import * as _ from 'lodash';
+import * as RIPEMD160 from 'ripemd160';
 import { Model } from 'sequelize-typescript';
 import z_schema from 'z-schema';
 import {
@@ -141,18 +143,17 @@ export class TransactionLogic implements ITransactionLogic {
     }
 
     if (tx.recipientId) {
-      const recipient = tx.recipientId.slice(0, -1);
-      const recBuf    = new BigNum(recipient).toBuffer({ size: 8 });
-
-      for (let i = 0; i < 8; i++) {
-        bb.writeByte(recBuf[i] || 0);
-      }
+      const addr = Buffer.concat([
+        Buffer.from('42424e', 'hex'), // BBN
+        bs58check.decode(tx.recipientId.substr(3)),
+      ]);
+      bb.append(addr);
     } else {
-      for (let i = 0; i < 8; i++) {
-        bb.writeByte(0);
-      }
+      bb.append(new Buffer(23).fill(0));
     }
 
+    // tslint:disable-next-line
+    bb['writeLong'](tx.fee);
     // tslint:disable-next-line
     bb['writeLong'](tx.amount);
 
@@ -715,11 +716,7 @@ export class TransactionLogic implements ITransactionLogic {
    */
   private getIdFromBytes(bytes: Buffer): string {
     const hash = crypto.createHash('sha256').update(bytes).digest();
-    const temp = Buffer.alloc(8);
-    for (let i = 0; i < 8; i++) {
-      temp[i] = hash[7 - i];
-    }
-    return BigNum.fromBuffer(temp).toString();
+    return bs58check.encode(new RIPEMD160().update(hash).digest());
   }
 
 }

@@ -13,11 +13,6 @@ export interface ITransportModule extends IModule {
                        requestHandler: IAPIRequest<any, any>): Promise<{ body: any; peer: IPeerLogic }>;
 
   /**
-   * Calls enqueue signatures and emits a signature change socket message
-   */
-  onSignature(signature: { transaction: string, signature: string, relays?: number }, broadcast: boolean): void;
-
-  /**
    * Calls enqueue if broadcast is true and did not exhaust relays
    * Be aware that the transaction object is modified by adding relays: number
    */
@@ -29,13 +24,6 @@ export interface ITransportModule extends IModule {
    * Be aware that original block will be modified by adding relays if not there.
    */
   onNewBlock(block: SignedBlockType & { relays?: number }, broadcast: boolean): Promise<void>;
-
-  receiveSignatures(signatures: Array<{ transaction: string, signature: string }>): Promise<void>;
-
-  /**
-   * Validate signature with schema and calls processSignature from module multisignautre
-   */
-  receiveSignature(signature: { transaction: string, signature: string }): Promise<void>;
 
   /**
    * Loops over the received transactions, Checks tx is ok by normalizing it and eventually remove peer if tx is not valid

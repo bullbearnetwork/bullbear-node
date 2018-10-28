@@ -90,8 +90,6 @@ export class LoaderModule implements ILoaderModule {
   private blocksUtilsModule: IBlocksModuleUtils;
   @inject(Symbols.modules.blocksSubModules.verify)
   private blocksVerifyModule: IBlocksModuleVerify;
-  @inject(Symbols.modules.multisignatures)
-  private multisigModule: IMultisignaturesModule;
   @inject(Symbols.modules.peers)
   private peersModule: IPeersModule;
   @inject(Symbols.modules.system)
@@ -160,8 +158,6 @@ export class LoaderModule implements ILoaderModule {
     if (this.loaded && !this.config.forging.transactionsPolling) {
       await this.syncTransactions()
         .catch((e) => this.logger.info('Failed to sync transactions on startup', e));
-      await this.syncSignatures()
-        .catch((e) => this.logger.info('Failed to sync signatures on startup', e));
     }
   }
 
@@ -549,7 +545,6 @@ export class LoaderModule implements ILoaderModule {
         if (this.config.forging.transactionsPolling) {
           this.logger.info('Polling transactions and signatures');
           await this.syncTransactions();
-          await this.syncSignatures();
           this.logger.info('Finished polling');
         }
       }
@@ -573,61 +568,6 @@ export class LoaderModule implements ILoaderModule {
       this.logger.log('Unconfirmed transactions loader error', e);
     }
   }
-
-  /**
-   * Tries loading multisig transactions from peers for this.retries times or logs errors
-   */
-  private async syncSignatures() {
-    // load multisignature transactions
-    try {
-      await promiseRetry(async (retry) => {
-        try {
-          await this.loadSignatures();
-        } catch (e) {
-          this.logger.warn('Error loading signatures... Retrying... ', e);
-          retry(e);
-        }
-      }, { retries: this.retries });
-    } catch (e) {
-      this.logger.log('Multisig pending transactions loader error', e);
-    }
-  }
-
-  /**
-   * Loads pending multisignature transactions
-   */
-  private async loadSignatures() {
-    const randomPeer = await this.getRandomPeer();
-    this.logger.log(`Loading signatures from: ${randomPeer.string}`);
-    const res = await randomPeer.makeRequest<{signatures: any[]}>(
-      this.gsFactory({data: null})
-    );
-
-    if (!this.schema.validate(res, loaderSchema.loadSignatures)) {
-      throw new Error('Failed to validate /signatures schema');
-    }
-
-    // FIXME: signatures array
-    const { signatures }: { signatures: any[] } = res;
-
-    // Process multisignature transactions and validate signatures in sequence
-    await this.defaultSequence.addAndPromise(async () => {
-      for (const multiSigTX of signatures) {
-        for (const signature of  multiSigTX.signatures) {
-          try {
-            await this.multisigModule.processSignature({
-              signature,
-              transaction: multiSigTX.transaction,
-            });
-          } catch (err) {
-            this.logger.warn(`Cannot process multisig signature for ${multiSigTX.transaction} `, err);
-          }
-        }
-      }
-      return void 0;
-    });
-  }
-
   /**
    * Load transactions from a random peer.
    * Validates each transaction from peer and eventually remove the peer if invalid.

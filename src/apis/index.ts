@@ -3,7 +3,6 @@ import { AccountsAPI } from './accountsAPI';
 import { BlocksAPI } from './blocksAPI';
 import { DelegatesAPI } from './delegatesAPI';
 import { LoaderAPI } from './loaderAPI';
-import { MultisignatureAPI } from './multisignatureAPI';
 import { PeersAPI } from './peersAPI';
 import { SignaturesAPI } from './signatureAPI';
 import { TransactionsAPI } from './transactions';
@@ -15,7 +14,6 @@ export * from './accountsAPI';
 export * from './blocksAPI';
 export * from './delegatesAPI';
 export * from './loaderAPI';
-export * from './multisignatureAPI';
 export * from './peersAPI';
 export * from './signatureAPI';
 export * from './transactions';
@@ -28,7 +26,6 @@ export const allControllers = [
   BlocksAPI,
   DelegatesAPI,
   LoaderAPI,
-  MultisignatureAPI,
   PeersAPI,
   SignaturesAPI,
   TransactionsAPI,

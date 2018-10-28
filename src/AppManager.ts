@@ -20,7 +20,6 @@ import { HeightRequest } from './apis/requests/HeightRequest';
 import { PeersListRequest } from './apis/requests/PeersListRequest';
 import { PingRequest } from './apis/requests/PingRequest';
 import { PostBlocksRequest } from './apis/requests/PostBlocksRequest';
-import { PostSignaturesRequest } from './apis/requests/PostSignaturesRequest';
 import { PostTransactionsRequest } from './apis/requests/PostTransactionsRequest';
 import { requestSymbols } from './apis/requests/requestSymbols';
 import { AttachPeerHeaders } from './apis/utils/attachPeerHeaders';
@@ -68,7 +67,6 @@ import {
 } from './logic/';
 import {
   BaseTransactionType,
-  MultiSignatureTransaction,
   RegisterDelegateTransaction,
   SecondSignatureTransaction,
   SendTransaction,
@@ -76,14 +74,11 @@ import {
 } from './logic/transactions';
 import {
   Accounts2DelegatesModel,
-  Accounts2MultisignaturesModel,
   Accounts2U_DelegatesModel,
-  Accounts2U_MultisignaturesModel,
   AccountsModel,
   BlocksModel,
   DelegatesModel, ExceptionModel,
   ForksStatsModel, InfoModel, MigrationsModel,
-  MultiSignaturesModel,
   PeersModel,
   RoundsFeesModel,
   RoundsModel,
@@ -99,7 +94,6 @@ import {
   DummyCache,
   ForgeModule,
   LoaderModule,
-  MultisignaturesModule,
   PeersModule,
   RoundsModule,
   SystemModule,
@@ -345,16 +339,13 @@ export class AppManager {
   private modelsElements(sequelize) {
     this.container.bind(Symbols.models.accounts).toConstructor(AccountsModel);
     this.container.bind(Symbols.models.accounts2Delegates).toConstructor(Accounts2DelegatesModel);
-    this.container.bind(Symbols.models.accounts2Multisignatures).toConstructor(Accounts2MultisignaturesModel);
     this.container.bind(Symbols.models.accounts2U_Delegates).toConstructor(Accounts2U_DelegatesModel);
-    this.container.bind(Symbols.models.accounts2U_Multisignatures).toConstructor(Accounts2U_MultisignaturesModel);
     this.container.bind(Symbols.models.blocks).toConstructor(BlocksModel);
     this.container.bind(Symbols.models.delegates).toConstructor(DelegatesModel);
     this.container.bind(Symbols.models.exceptions).toConstructor(ExceptionModel);
     this.container.bind(Symbols.models.forkStats).toConstructor(ForksStatsModel);
     this.container.bind(Symbols.models.info).toConstructor(InfoModel);
     this.container.bind(Symbols.models.migrations).toConstructor(MigrationsModel);
-    this.container.bind(Symbols.models.multisignatures).toConstructor(MultiSignaturesModel);
     this.container.bind(Symbols.models.peers).toConstructor(PeersModel);
     this.container.bind(Symbols.models.roundsFees).toConstructor(RoundsFeesModel);
     this.container.bind(Symbols.models.rounds).toConstructor(RoundsModel);
@@ -381,7 +372,6 @@ export class AppManager {
     this.container.bind(Symbols.modules.forge).to(ForgeModule).inSingletonScope();
     this.container.bind(Symbols.modules.fork).to(ForkModule).inSingletonScope();
     this.container.bind(Symbols.modules.loader).to(LoaderModule).inSingletonScope();
-    this.container.bind(Symbols.modules.multisignatures).to(MultisignaturesModule).inSingletonScope();
     this.container.bind(Symbols.modules.peers).to(PeersModule).inSingletonScope();
     this.container.bind(Symbols.modules.rounds).to(RoundsModule).inSingletonScope();
     this.container.bind(Symbols.modules.system).to(SystemModule).inSingletonScope();
@@ -410,7 +400,6 @@ export class AppManager {
     this.container.bind(Symbols.logic.transactionPool).to(TransactionPool).inSingletonScope();
     this.container.bind(Symbols.logic.transactions.send).to(SendTransaction).inSingletonScope();
     this.container.bind(Symbols.logic.transactions.vote).to(VoteTransaction).inSingletonScope();
-    this.container.bind(Symbols.logic.transactions.createmultisig).to(MultiSignatureTransaction).inSingletonScope();
     this.container.bind(Symbols.logic.transactions.delegate).to(RegisterDelegateTransaction).inSingletonScope();
     this.container.bind(Symbols.logic.transactions.secondSignature).to(SecondSignatureTransaction).inSingletonScope();
   }
@@ -454,7 +443,6 @@ export class AppManager {
     this.container.bind(requestSymbols.peersList).toFactory(factory(PeersListRequest));
     this.container.bind(requestSymbols.ping).toFactory(factory(PingRequest));
     this.container.bind(requestSymbols.postBlocks).toFactory(factory(PostBlocksRequest));
-    this.container.bind(requestSymbols.postSignatures).toFactory(factory(PostSignaturesRequest));
     this.container.bind(requestSymbols.postTransactions).toFactory(factory(PostTransactionsRequest));
   }
 

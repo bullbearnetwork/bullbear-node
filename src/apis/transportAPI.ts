@@ -125,41 +125,6 @@ export class TransportAPI {
     return { peers: peers.map(((peer) => peer.object())) };
   }
 
-  @Get('/signatures')
-  public signatures() {
-    const txs: Array<IBaseTransaction<any>> =
-            this.transactionsModule.getMultisignatureTransactionList(true, this.constants.maxSharedTxs);
-
-    const signatures = [];
-    for (const tx of txs) {
-      if (tx.signatures && tx.signatures.length > 0) {
-        signatures.push({
-          signatures : tx.signatures,
-          transaction: tx.id,
-        });
-      }
-    }
-    return { signatures };
-  }
-
-  @Post('/signatures')
-  public async postSignatures(
-    @BodyParam('signatures') signatures: Array<{ transaction: string, signature: string }>,
-    @BodyParam('signature') signature: { transaction: string, signature: string }
-  ) {
-
-    if (!Array.isArray(signatures)) {
-      signatures = [];
-    } else {
-      assertValidSchema(this.schema, signatures, { obj: transportSchema.signatures.properties.signatures });
-    }
-    if (typeof(signature) !== 'undefined') {
-      assertValidSchema(this.schema, signature, { obj: transportSchema.signature });
-      signatures.push(signature);
-    }
-    return this.transportModule.receiveSignatures(signatures);
-  }
-
   @Get('/transactions')
   public transactions() {
     const transactions = this.transactionsModule.getMergedTransactionList(this.constants.maxSharedTxs);

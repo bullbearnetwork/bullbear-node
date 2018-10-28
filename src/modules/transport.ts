@@ -9,7 +9,6 @@ import * as z_schema from 'z-schema';
 import { IAPIRequest } from '../apis/requests/BaseRequest';
 import { PeersListRequest, PeersListRequestDataType } from '../apis/requests/PeersListRequest';
 import { PostBlocksRequest, PostBlocksRequestDataType } from '../apis/requests/PostBlocksRequest';
-import { PostSignaturesRequest, PostSignaturesRequestDataType } from '../apis/requests/PostSignaturesRequest';
 import { PostTransactionsRequest, PostTransactionsRequestDataType } from '../apis/requests/PostTransactionsRequest';
 import { RequestFactoryType } from '../apis/requests/requestFactoryType';
 import { requestSymbols } from '../apis/requests/requestSymbols';
@@ -71,8 +70,6 @@ export class TransportModule implements ITransportModule {
   private transactionLogic: ITransactionLogic;
 
   // Modules
-  @inject(Symbols.modules.multisignatures)
-  private multisigModule: IMultisignaturesModule;
   @inject(Symbols.modules.peers)
   private peersModule: IPeersModule;
   @inject(Symbols.modules.system)
@@ -91,8 +88,6 @@ export class TransportModule implements ITransportModule {
   // requests
   @inject(requestSymbols.postTransactions)
   private ptrFactory: RequestFactoryType<PostTransactionsRequestDataType, PostTransactionsRequest>;
-  @inject(requestSymbols.postSignatures)
-  private psrFactory: RequestFactoryType<PostSignaturesRequestDataType, PostSignaturesRequest>;
   @inject(requestSymbols.postBlocks)
   private pblocksFactory: RequestFactoryType<PostBlocksRequestDataType, PostBlocksRequest>;
   @inject(requestSymbols.peersList)
@@ -237,25 +232,6 @@ export class TransportModule implements ITransportModule {
     }, 5000);
   }
 
-  /**
-   * Calls enqueue signatures and emits a signature change socket message
-   * TODO: Eventually fixme
-   */
-  public onSignature(signature: { transaction: string, signature: string, relays?: number }, broadcast: boolean) {
-    if (broadcast && !this.broadcasterLogic.maxRelays(signature)) {
-      const requestHandler = this.psrFactory({
-        data: {
-          signatures: [{
-            relays     : Number.isInteger(signature.relays) ? signature.relays : 1,
-            signature  : Buffer.from(signature.signature, 'hex'),
-            transaction: signature.transaction,
-          }],
-        },
-      });
-      this.broadcasterLogic.enqueue({}, { requestHandler });
-      this.io.sockets.emit('signature/change', signature);
-    }
-  }
 
   /**
    * Calls enqueue if broadcast is true and did not exhaust relays
@@ -303,30 +279,6 @@ export class TransportModule implements ITransportModule {
           .catch((err) => this.logger.warn('Error broadcasting block', err));
       }
       this.io.sockets.emit('blocks/change', block);
-    }
-  }
-
-  // tslint:disable-next-line
-  public async receiveSignatures(signatures: Array<{ transaction: string, signature: string }>): Promise<void> {
-    for (const signature of signatures) {
-      try {
-        await this.receiveSignature(signature);
-      } catch (err) {
-        this.logger.debug(err, signature);
-      }
-    }
-  }
-
-  /**
-   * Validate signature with schema and calls processSignature from module multisignautre
-   */
-  @ValidateSchema()
-  public async receiveSignature(@SchemaValid(schema.signature, 'Invalid signature body')
-                                  signature: { transaction: string, signature: string }) {
-    try {
-      await this.multisigModule.processSignature(signature);
-    } catch (e) {
-      throw new Error(`Error processing signature: ${e.message || e}`);
     }
   }
 
