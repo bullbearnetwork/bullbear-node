@@ -203,8 +203,8 @@ describe('apis/transactionsAPI', () => {
         expect(where.height[Op.lte]).to.be.eq(20);
         expect(where.height[Op.gte]).to.be.eq(10);
 
-        expect(where.recipientId[Op.in]).to.be.deep.eq(['5', '6', '7', '8', 'EXTRAREC']);
-        expect(where.senderId[Op.in]).to.be.deep.eq(['1', '2', '3', '4', 'EXTRA']);
+        expect(where.recipientId[Op.in]).to.be.deep.eq(['5', '6', '7', '8', 'extraRec']);
+        expect(where.senderId[Op.in]).to.be.deep.eq(['1', '2', '3', '4', 'extra']);
 
         expect(where.type[Op.eq]).to.be.deep.eq(0);
       });
@@ -266,7 +266,7 @@ describe('apis/transactionsAPI', () => {
           Buffer.from('dd', 'hex'),
           Buffer.from('aa', 'hex'),
         ]);
-        expect(where.timestamp[Op.lte]).to.be.deep.eq(-1464109200);
+        expect(where.timestamp[Op.lte]).to.be.deep.eq(-1538352000);
         expect(where.timestamp[Op.gte]).to.be.deep.eq(120);
         expect(where.type[Op.eq]).to.be.deep.eq(1);
 
@@ -278,8 +278,8 @@ describe('apis/transactionsAPI', () => {
         expect(where[Op.or].height[Op.lte]).to.be.eq(20);
         expect(where[Op.or].height[Op.gte]).to.be.eq(10);
 
-        expect(where[Op.or].recipientId[Op.in]).to.be.deep.eq(['5', '6', '7', '8', 'OVERRIDDENREC']);
-        expect(where[Op.or].senderId[Op.in]).to.be.deep.eq(['1', '2', '3', '4', 'OVERRIDDENSENDER']);
+        expect(where[Op.or].recipientId[Op.in]).to.be.deep.eq(['5', '6', '7', '8', 'overriddenrec']);
+        expect(where[Op.or].senderId[Op.in]).to.be.deep.eq(['1', '2', '3', '4', 'overriddensender']);
 
         expect(where[Op.or].type[Op.eq]).to.be.deep.eq(0);
       });

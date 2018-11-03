@@ -540,7 +540,7 @@ describe('apis/delegatesAPI', () => {
         LEFT JOIN (SELECT "dependentId", COUNT(1)::int AS voters_cnt from mem_accounts2delegates GROUP BY "dependentId") v ON v."dependentId" = ENCODE(m."publicKey", 'hex')
         WHERE m."isDelegate" = 1
         ORDER BY "username" ASC)
-      SELECT * FROM delegates WHERE username LIKE '%vek%' LIMIT 101
+      SELECT * FROM delegates WHERE username LIKE '%vek%' LIMIT 41
     `);
     });
     it('should honorate also limit and orderBy with a SQL injection test', async () => {

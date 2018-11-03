@@ -270,7 +270,7 @@ describe('apis/blocksAPI', () => {
 
     it('should return an epoch', () => {
       const ret   = instance.getEpoch();
-      const epoch = new Date(Date.UTC(2016, 4, 24, 17, 0, 0, 0));
+      const epoch = new Date(Date.UTC(2018, 9, 1, 0, 0, 0, 0));
 
       expect(ret).to.be.deep.equal({ epoch });
     });
@@ -451,7 +451,7 @@ describe('apis/blocksAPI', () => {
     });
 
     it('should return a status', async () => {
-      const epoch = new Date(Date.UTC(2016, 4, 24, 17, 0, 0, 0));
+      const epoch = new Date(Date.UTC(2018, 9, 1, 0, 0, 0, 0));
 
       const ret = await instance.getStatus();
 
