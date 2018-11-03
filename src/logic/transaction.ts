@@ -341,7 +341,7 @@ export class TransactionLogic implements ITransactionLogic {
       throw new Error('Invalid sender. Can not send from genesis account');
     }
 
-    if (String(tx.senderId).toUpperCase() !== String(sender.address).toUpperCase()) {
+    if (tx.senderId !== sender.address) {
       throw new Error('Invalid sender address');
     }
 

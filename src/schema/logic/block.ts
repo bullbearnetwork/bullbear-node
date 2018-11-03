@@ -6,8 +6,8 @@ export default {
     id                  : {
       type     : 'string',
       format   : 'id',
-      minLength: 1,
-      maxLength: 20,
+      minLength: 32,
+      maxLength: 33,
     },
     height              : {
       type: 'integer',
@@ -36,8 +36,8 @@ export default {
     previousBlock       : {
       type     : 'string',
       format   : 'id',
-      minLength: 1,
-      maxLength: 20,
+      minLength: 32,
+      maxLength: 33,
     },
     timestamp           : {
       type: 'integer',

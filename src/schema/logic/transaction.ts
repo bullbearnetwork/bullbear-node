@@ -8,8 +8,8 @@ export default {
     id                : {
       type     : 'string',
       format   : 'id',
-      minLength: 1,
-      maxLength: 20,
+      minLength: 32,
+      maxLength: 33,
     },
     height            : {
       type: 'integer',
@@ -17,8 +17,8 @@ export default {
     blockId           : {
       type     : 'string',
       format   : 'id',
-      minLength: 1,
-      maxLength: 20,
+      minLength: 32,
+      maxLength: 33,
     },
     type              : {
       type: 'integer',
@@ -38,14 +38,14 @@ export default {
     senderId          : {
       type     : 'string',
       format   : 'address',
-      minLength: 1,
-      maxLength: 22,
+      minLength: 35,
+      maxLength: 36,
     },
     recipientId       : {
       type     : 'string',
       format   : 'address',
-      minLength: 1,
-      maxLength: 22,
+      minLength: 35,
+      maxLength: 36,
     },
     amount            : {
       type   : 'integer',

@@ -60,28 +60,31 @@ export class DelegatesModule implements IDelegatesModule {
     return this.checkDelegates(account, votes, 'unconfirmed');
   }
 
+  private cache = {};
   /**
    * Generate a randomized list for the round of which the given height is into.
    * @param {number} height blockheight.
    * @return {Promise<publicKey[]>}
    */
   public async generateDelegateList(height: number): Promise<Buffer[]> {
-    const pkeys      = await this.getKeysSortByVote();
-    const seedSource = this.roundsLogic.calcRound(height).toString();
-    let currentSeed  = crypto.createHash('sha256').update(seedSource, 'utf8').digest();
+    if (!this.cache[this.roundsLogic.calcRound(height)]) {
+      const pkeys      = await this.getKeysSortByVote();
+      const seedSource = this.roundsLogic.calcRound(height).toString();
+      let currentSeed  = crypto.createHash('sha256').update(seedSource, 'utf8').digest();
 
-    // Shuffle public keys.
-    for (let i = 0, delegatesCount = pkeys.length; i < delegatesCount; i++) {
-      for (let x = 0; x < 4 && i < delegatesCount; i++, x++) {
-        const newIndex  = currentSeed[x] % delegatesCount;
-        const b         = pkeys[newIndex];
-        pkeys[newIndex] = pkeys[i];
-        pkeys[i]        = b;
+      // Shuffle public keys.
+      for (let i = 0, delegatesCount = pkeys.length; i < delegatesCount; i++) {
+        for (let x = 0; x < 4 && i < delegatesCount; i++, x++) {
+          const newIndex  = currentSeed[x] % delegatesCount;
+          const b         = pkeys[newIndex];
+          pkeys[newIndex] = pkeys[i];
+          pkeys[i]        = b;
+        }
+        currentSeed = crypto.createHash('sha256').update(currentSeed).digest();
       }
-      currentSeed = crypto.createHash('sha256').update(currentSeed).digest();
+      this.cache[this.roundsLogic.calcRound(height)] = pkeys;
     }
-
-    return pkeys;
+    return this.cache[this.roundsLogic.calcRound(height)];
   }
 
   /**

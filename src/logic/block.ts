@@ -297,16 +297,9 @@ export class BlockLogic implements IBlockLogic {
     bb.writeInt(block.timestamp);
 
     if (block.previousBlock) {
-      const pb = new BigNum(block.previousBlock)
-        .toBuffer({ size: 8 });
-
-      for (let i = 0; i < 8; i++) {
-        bb.writeByte(pb[i]);
-      }
+      bb.append(bs58check.decode(block.previousBlock));
     } else {
-      for (let i = 0; i < 8; i++) {
-        bb.writeByte(0);
-      }
+      bb.append(new Buffer(23).fill(0));
     }
 
     bb.writeInt(block.numberOfTransactions);

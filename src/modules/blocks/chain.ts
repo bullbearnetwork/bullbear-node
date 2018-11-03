@@ -120,7 +120,9 @@ export class BlocksModuleChain implements IBlocksModuleChain {
   public async saveGenesisBlock() {
     const genesis = await this.BlocksModel.findById(this.genesisBlock.id);
     if (!genesis) {
-      return this.BlocksModel.sequelize.transaction((t) => this.saveBlock(this.genesisBlock, t));
+      this.genesisBlock.previousBlock = null;
+      await this.BlocksModel.sequelize.transaction((t) => this.saveBlock(this.genesisBlock, t));
+      this.genesisBlock.previousBlock = this.genesisBlock.id;
     }
   }
 

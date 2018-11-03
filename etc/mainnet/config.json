@@ -50,15 +50,7 @@
         "banTime": 90000,
         "list": [
             {
-                "ip": "45.32.136.66",
-                "port": 5555
-            },
-            {
-                "ip": "45.76.36.14",
-                "port": 5555
-            },
-            {
-                "ip": "212.24.96.99",
+                "ip": "127.0.0.1",
                 "port": 5555
             }
         ],
@@ -86,8 +78,50 @@
         "maxTxsPerQueue": 1000
     },
     "forging": {
-        "force": false,
-        "secret": [],
+        "force": true,
+        "secret": [
+            "brief endorse diesel betray rabbit decrease thing trust width gorilla still hover",
+            "bleak swift prosper great distance lend melody hire unfair what marble clean",
+            "lawsuit route inject chunk force whisper mouse person narrow leave return trial",
+            "gas amazing shove park sustain degree bench turkey pole turn dance panther",
+            "brave traffic glove bicycle retire caution outdoor unusual famous rain impose traffic",
+            "panda away sort risk catch magnet file spirit result world ahead crane",
+            "lucky region moment deny open evidence good junior basic sunny honey equal",
+            "detail gallery dinner balance mule gift bind market average tone educate street",
+            "neglect awful frozen twenty play pear author sweet enough chief alarm like",
+            "obtain focus stove shy brown salute hollow armed author machine fun chief",
+            "dolphin vanish popular repair dune connect label bomb way pink soap love",
+            "matrix hello island rotate profit fuel cruel grant tree raven member cable",
+            "shrimp trip series machine harbor warm betray mother thought real that expand",
+            "advance antenna ahead motion engage square actual warfare topic alpha obey myself",
+            "emotion sibling mechanic price above under wrap derive avocado animal output frozen",
+            "wine piece deal goose earth news quote arrange exclude vital vicious dust",
+            "dream range scare enlist gain chuckle damp chunk dust plug option problem",
+            "eyebrow atom acoustic embrace hotel caution toast slogan artefact taste aspect clog",
+            "venture want describe fault quantum employ proud hair audit round mother amount",
+            "window predict hero ramp whisper damage fork orbit broom host round observe",
+            "all city agent maximum rich infant ceiling visual opinion coin toddler evoke",
+            "dignity ready chapter pull gauge race palace funny provide stadium gesture crystal",
+            "team firm sister cotton sugar melt bulk powder swamp neither fiscal occur",
+            "gym effort board wool project cliff cruise rookie inspire guide mix bulb",
+            "apology deny rug leaf sweet price track blind country step fresh neither",
+            "have also figure legend become cheese year prepare advice pull rose setup",
+            "pigeon ordinary rose resist rain antique uphold quote sure trust robust later",
+            "smoke volume razor scare maid rubber crouch rude entire say buddy hello",
+            "inch essay memory tent extra there evolve allow excess earn open goose",
+            "spoon naive unaware matter bamboo hazard dismiss upset blast joke stay spin",
+            "where champion swallow hour wage frozen biology blossom near exercise special excuse",
+            "media panther seek group lucky pelican tennis noise board squirrel fox first",
+            "sign pulp case stage tree example fox decide motion nation bring common",
+            "quote rally scissors power forum seminar find nominee submit boss soul attend",
+            "vivid ivory viable elder demand then sausage marriage lucky current obtain chuckle",
+            "level sing wage pave chair napkin camera diary churn top install plunge",
+            "claim puppy arm trophy federal sister bike flee caution hard zoo use",
+            "wool exchange cruise game ocean very answer silly envelope zone holiday effort",
+            "correct smoke wire knee surprise saddle this history crater emotion estate execute",
+            "private frame swear neck version wonder retire picture develop prefer bring chat",
+            "bid physical motion dutch roast feel atom scrub rack mosquito impact mixture"
+        ],
         "access": {
             "whiteList": [
                 "127.0.0.1"

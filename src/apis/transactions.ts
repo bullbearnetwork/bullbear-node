@@ -375,16 +375,16 @@ export class TransactionsAPI {
     }
 
     if (Array.isArray(body.senderIds)) {
-      whereClause.senderId = { [Op.in]: body.senderIds.map((item) => item.toUpperCase()) };
+      whereClause.senderId = { [Op.in]: body.senderIds };
       if (body.senderId) {
-        whereClause.senderId[Op.in].push(body.senderId.toUpperCase());
+        whereClause.senderId[Op.in].push(body.senderId);
       }
     }
 
     if (Array.isArray(body.recipientIds)) {
-      whereClause.recipientId = { [Op.in]: body.recipientIds.map((item) => item.toUpperCase()) };
+      whereClause.recipientId = { [Op.in]: body.recipientIds };
       if (body.recipientId) {
-        whereClause.recipientId[Op.in].push(body.recipientId.toUpperCase());
+        whereClause.recipientId[Op.in].push(body.recipientId);
       }
     }
 

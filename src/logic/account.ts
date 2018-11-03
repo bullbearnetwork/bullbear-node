@@ -11,12 +11,7 @@ import * as z_schema from 'z-schema';
 import { BigNum, catchToLoggerAndRemapError, constants, ILogger } from '../helpers/';
 import { IAccountLogic } from '../ioc/interfaces/';
 import { Symbols } from '../ioc/symbols';
-import {
-  Accounts2DelegatesModel,
-  Accounts2U_DelegatesModel,
-  AccountsModel,
-  RoundsModel
-} from '../models/';
+import { Accounts2DelegatesModel, Accounts2U_DelegatesModel, AccountsModel, RoundsModel } from '../models/';
 import { DBOp } from '../types/genericTypes';
 import { FieldsInModel, ModelAttributes } from '../types/utils';
 import { accountsModelCreator } from './models/account';
@@ -281,9 +276,9 @@ export class AccountLogic implements IAccountLogic {
 
     const condition: any = filterObject(filter, ['isDelegate', 'username', 'address', 'publicKey']);
     if (typeof(filter.address) === 'string') {
-      condition.address = filter.address.toUpperCase();
+      condition.address = filter.address;
     } else if (typeof (filter.address) !== 'undefined') {
-      condition.address = { [Op.in]: filter.address.$in.map((add) => add.toUpperCase()) };
+      condition.address = { [Op.in]: filter.address.$in };
     }
     // Remove fields = undefined (such as limit, offset and sort)
     Object.keys(condition).forEach((k) => {
@@ -320,7 +315,6 @@ export class AccountLogic implements IAccountLogic {
    */
   public async set(address: string, fields: ModelAttributes<AccountsModel>) {
     this.assertPublicKey(fields.publicKey);
-    address        = String(address).toUpperCase();
     fields.address = address;
     // TODO: check if publicKey and address are coherent. ?
     await this.AccountsModel.upsert(fields);
@@ -333,7 +327,6 @@ export class AccountLogic implements IAccountLogic {
    */
   public merge(address: string, diff: AccountDiffType): Array<DBOp<any>> {
     const update: any             = {};
-    address                       = address.toUpperCase();
     const dbOps: Array<DBOp<any>> = [];
 
     this.assertPublicKey(diff.publicKey);
@@ -408,27 +401,26 @@ export class AccountLogic implements IAccountLogic {
    * @returns {Promise<number>}
    */
   public async remove(address: string): Promise<number> {
-    return await this.AccountsModel.destroy({ where: { address: address.toUpperCase() } });
+    return await this.AccountsModel.destroy({ where: { address } });
   }
 
   public generateAddressByPublicKey(publicKey: string|Buffer): string {
     this.assertPublicKey(publicKey, false);
-
     const hash = crypto.createHash('sha256')
       .update(Buffer.isBuffer(publicKey)
         ? publicKey
         : new Buffer(publicKey, 'hex')
       )
       .digest();
-    return `BBN${bs58check.encode(new RIPEMD160().update(hash).digest())}`;
+    return `${bs58check.encode(new RIPEMD160().update(hash).digest())}BBN`;
   }
 
   public assertValidAddress(address: string): void {
-    if (address.startsWith('0') && address !== '0R') {
-      throw new Error('Invalid Address starting with 0');
+    if (!this.schema.validate({ type: 'string', format: 'address' }, address)) {
+      throw new Error('Invalid Address');
     }
-    if (new BigNum(address.slice(0, -1)).isGreaterThan(maxAddress)) {
-      throw new Error('Invalid Address exceeding maximum address');
-    }
+
+    // It throws if not valid.
+    bs58check.decode(address.substr(3));
   }
 }

@@ -313,9 +313,7 @@ export class AppManager {
       .upsert({key: 'genesisAccount', value: this.genesisBlock.transactions[0].senderId});
 
     // Move the genesis from string signatures to buffer signatures
-    this.genesisBlock.previousBlock = '1'; // exception for genesisblock
     this.container.get<IBlockLogic>(Symbols.logic.block).objectNormalize(this.genesisBlock);
-    this.genesisBlock.previousBlock = null;
 
     const blocksChainModule = this.container.get<IBlocksModuleChain>(Symbols.modules.blocksSubModules.chain);
     await blocksChainModule.saveGenesisBlock();

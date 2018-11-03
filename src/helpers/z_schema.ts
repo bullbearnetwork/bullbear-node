@@ -28,11 +28,11 @@ z_schema.registerFormat('id', (str: string) => {
     return true;
   }
 
-  return /^[0-9]+$/g.test(str);
+  return /^^[a-zA-Z0-9]{32,33}$/g.test(str);
 });
 
 z_schema.registerFormat('address', (str: string) => {
-  return new RegExp(`^[a-zA-Z0-9]{33}${constants.addressSuffix}$`).test(str);
+  return new RegExp(`^[a-zA-Z0-9]{32,33}${constants.addressSuffix}$`).test(str);
 });
 
 z_schema.registerFormat('username', (str: string) => {
