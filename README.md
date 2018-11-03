@@ -1,7 +1,7 @@
-## Rise-node version 1.2.0
+## BBN-node version 1.2.0
 
 # RISE
-[![Build Status](https://travis-ci.org/RiseVision/rise-node.svg?branch=development)](https://travis-ci.org/RiseVision/rise-node) [![Coverage Status](https://coveralls.io/repos/github/RiseVision/rise-node/badge.svg?branch=development)](https://coveralls.io/github/RiseVision/rise-node?branch=development) 
+ 
 ## Installation
 
 An automatic install script for Ubuntu is available.
@@ -10,7 +10,7 @@ An automatic install script for Ubuntu is available.
 
 For detailed information on node installation and management please refer to the [wiki of this repository](https://github.com/RiseVision/rise-node/wiki).
 
-### Quick start Rise installation (Mainnet)
+### Quick start bbn installation (Mainnet)
 
 First, perform some basic checks:
 
@@ -27,10 +27,10 @@ cd $HOME
 Download the installer:
 
 ```
-wget https://raw.githubusercontent.com/RiseVision/rise-build/master/scripts/install.sh
+wget https://raw.githubusercontent.com/bbnVision/rise-build/master/scripts/install.sh
 ```
 
-Install Rise:
+Install bbn:
 ```
 bash install.sh install -r mainnet -u https://downloads.rise.vision/core/mainnet/latest.tar.gz
 ```
@@ -83,7 +83,7 @@ And finally restart your node to apply the changes:
 ./manager.sh reload node
 ```
 
-### Quick start Rise installation (Testnet) 
+### Quick start bbn installation (Testnet) 
 The same as above, only the install step is different:
 ```
 bash install.sh install -r testnet -u https://downloads.rise.vision/core/testnet/latest.tar.gz
@@ -114,7 +114,7 @@ wget https://downloads.rise.vision/snapshots/testnet/latest -O latestsnap.gz
 
 ## License
 
-Copyright © 2017 Rise<br>
+Copyright © 2017 bbn<br>
 Copyright © 2016-2017 Shift<br>  
 Copyright © 2016-2017 Lisk Foundation
 
@@ -122,13 +122,13 @@ This program is free software: you can redistribute it and/or modify it under th
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the [GNU General Public License](https://github.com/RiseVision/rise-node/src/master/LICENSE) along with this program.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the [GNU General Public License](https://github.com/bbnVision/rise-node/src/master/LICENSE) along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ***
 
 This program also incorporates work previously released with lisk `0.7.0` (and earlier) versions under the [MIT License](https://opensource.org/licenses/MIT). To comply with the requirements of that license, the following permission notice, applicable to those parts of the code only, is included below:
 
-Copyright © 2017 Rise<br>
+Copyright © 2017 bbn<br>
 Copyright © 2016-2017 Shift<br>
 Copyright © 2016-2017 Lisk Foundation<br>  
 Copyright © 2015 Crypti
