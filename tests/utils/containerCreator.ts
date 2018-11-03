@@ -37,15 +37,14 @@ import { RoundsModuleStub } from '../stubs/modules/RoundsModuleStub';
 import TransportModuleStub from '../stubs/modules/TransportModuleStub';
 import SocketIOStub from '../stubs/utils/SocketIOStub';
 import {
-  AccountsModel, BlocksModel, DelegatesModel, SignaturesModel, TransactionsModel, MultiSignaturesModel,
-  VotesModel, Accounts2DelegatesModel, Accounts2MultisignaturesModel, Accounts2U_DelegatesModel,
-  Accounts2U_MultisignaturesModel, RoundsModel, ForksStatsModel, PeersModel, RoundsFeesModel, InfoModel, ExceptionModel,
+  AccountsModel, BlocksModel, DelegatesModel, SignaturesModel, TransactionsModel,
+  VotesModel, Accounts2DelegatesModel, Accounts2U_DelegatesModel,
+  RoundsModel, ForksStatsModel, PeersModel, RoundsFeesModel, InfoModel, ExceptionModel,
   MigrationsModel
 } from '../../src/models';
 import { Sequelize } from 'sequelize-typescript';
 import { TransactionsModelStub } from '../stubs/models/TransactionsModelStub';
 import {
-  MultiSignatureTransaction,
   RegisterDelegateTransaction,
   SecondSignatureTransaction, SendTransaction, VoteTransaction
 } from '../../src/logic/transactions';
@@ -61,7 +60,6 @@ import { HeightRequest } from '../../src/apis/requests/HeightRequest';
 import { PeersListRequest } from '../../src/apis/requests/PeersListRequest';
 import { PingRequest } from '../../src/apis/requests/PingRequest';
 import { PostBlocksRequest } from '../../src/apis/requests/PostBlocksRequest';
-import { PostSignaturesRequest } from '../../src/apis/requests/PostSignaturesRequest';
 import { PostTransactionsRequest } from '../../src/apis/requests/PostTransactionsRequest';
 
 export const createContainer = (): Container => {
@@ -134,7 +132,6 @@ export const createContainer = (): Container => {
   container.bind(Symbols.modules.forge).to(ForgeModuleStub).inSingletonScope();
   container.bind(Symbols.modules.fork).to(ForkModuleStub).inSingletonScope();
   container.bind(Symbols.modules.loader).to(LoaderModuleStub).inSingletonScope();
-  container.bind(Symbols.modules.multisignatures).to(MultisignaturesModuleStub).inSingletonScope();
   container.bind(Symbols.modules.peers).to(PeersModuleStub).inSingletonScope();
   container.bind(Symbols.modules.rounds).to(RoundsModuleStub).inSingletonScope();
   container.bind(Symbols.modules.system).to(SystemModuleStub).inSingletonScope();
@@ -150,19 +147,15 @@ export const createContainer = (): Container => {
   container.bind(Symbols.models.info).toConstructor(InfoModel);
   container.bind(Symbols.models.transactions).toConstructor(TransactionsModel);
   container.bind(Symbols.models.accounts2Delegates).toConstructor(Accounts2DelegatesModel);
-  container.bind(Symbols.models.accounts2Multisignatures).toConstructor(Accounts2MultisignaturesModel);
   container.bind(Symbols.models.accounts2U_Delegates).toConstructor(Accounts2U_DelegatesModel);
-  container.bind(Symbols.models.accounts2U_Multisignatures).toConstructor(Accounts2U_MultisignaturesModel);
   container.bind(Symbols.models.peers).toConstructor(PeersModel);
   container.bind(Symbols.models.rounds).toConstructor(RoundsModel);
   container.bind(Symbols.models.roundsFees).toConstructor(RoundsFeesModel);
   container.bind(Symbols.models.votes).toConstructor(VotesModel);
   container.bind(Symbols.models.signatures).toConstructor(SignaturesModel);
   container.bind(Symbols.models.delegates).toConstructor(DelegatesModel);
-  container.bind(Symbols.models.multisignatures).toConstructor(MultiSignaturesModel);
 
   // TRansactions
-  container.bind(Symbols.logic.transactions.createmultisig).to(MultiSignatureTransaction).inSingletonScope();
   container.bind(Symbols.logic.transactions.delegate).to(RegisterDelegateTransaction).inSingletonScope();
   container.bind(Symbols.logic.transactions.secondSignature).to(SecondSignatureTransaction).inSingletonScope();
   container.bind(Symbols.logic.transactions.send).to(SendTransaction).inSingletonScope();
@@ -182,16 +175,13 @@ export const createContainer = (): Container => {
   container.bind(requestSymbols.peersList).toFactory(factory(PeersListRequest));
   container.bind(requestSymbols.ping).toFactory(factory(PingRequest));
   container.bind(requestSymbols.postBlocks).toFactory(factory(PostBlocksRequest));
-  container.bind(requestSymbols.postSignatures).toFactory(factory(PostSignaturesRequest));
   container.bind(requestSymbols.postTransactions).toFactory(factory(PostTransactionsRequest));
 
   const sequelize = container.get<Sequelize>(Symbols.generic.sequelize);
   const models = [
-    AccountsModel, BlocksModel, Accounts2DelegatesModel, Accounts2U_DelegatesModel, Accounts2MultisignaturesModel,
-    Accounts2U_MultisignaturesModel, ExceptionModel, ForksStatsModel, InfoModel, MigrationsModel, PeersModel, RoundsFeesModel, RoundsModel, TransactionsModel, MultiSignaturesModel, DelegatesModel, SignaturesModel, VotesModel];
+    AccountsModel, BlocksModel, Accounts2DelegatesModel, Accounts2U_DelegatesModel,
+    ExceptionModel, ForksStatsModel, InfoModel, MigrationsModel, PeersModel, RoundsFeesModel, RoundsModel, TransactionsModel, DelegatesModel, SignaturesModel, VotesModel];
   sequelize.addModels(models);
 
   return container;
 };
-
-

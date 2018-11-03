@@ -40,7 +40,6 @@ import { ISystemStub } from './modules/ISystemStub';
 import { PeersModuleStub } from './modules/PeersModuleStub';
 import { SystemModuleStub } from './modules/SystemModuleStub';
 import TransportModuleStub from './modules/TransportModuleStub';
-import MultisignaturesModuleStub from './modules/MultisignaturesModuleStub';
 
 // Models
 import {AccountsModelStub} from './models/AccountsModelStub';
@@ -93,7 +92,6 @@ export {
   SocketIOStub,
   IAppStateStub,
   BroadcasterLogicStub,
-  MultisignaturesModuleStub,
   SequenceStub,
   APIRequestStub
 };

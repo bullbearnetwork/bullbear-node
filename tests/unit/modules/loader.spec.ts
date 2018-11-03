@@ -1362,7 +1362,6 @@ describe('modules/loader', () => {
     let transportModuleStub: TransportModuleStub;
     let schemaStub: ZSchemaStub;
     let sequenceStub: SequenceStub;
-    let multisigModuleStub: MultisignaturesModuleStub;
 
     let res;
     let randomPeer;
@@ -1401,22 +1400,12 @@ describe('modules/loader', () => {
         Symbols.helpers.sequence,
         Symbols.tags.helpers.defaultSequence
       );
-      multisigModuleStub = container.get<MultisignaturesModuleStub>(
-        Symbols.modules.multisignatures
-      );
 
       getRandomPeerStub = sandbox
         .stub(instance as any, 'getRandomPeer')
         .resolves(randomPeer);
       transportModuleStub.enqueueResponse('getFromPeer', res);
-      multisigModuleStub.enqueueResponse(
-        'processSignature',
-        Promise.resolve({})
-      );
-      multisigModuleStub.enqueueResponse(
-        'processSignature',
-        Promise.resolve({})
-      );
+
     });
 
     afterEach(() => {
@@ -1424,7 +1413,6 @@ describe('modules/loader', () => {
       schemaStub.reset();
       transportModuleStub.reset();
       sequenceStub.reset();
-      multisigModuleStub.reset();
     });
 
     it('should call instance.getRandomPeer', async () => {
@@ -1478,58 +1466,6 @@ describe('modules/loader', () => {
       );
     });
 
-    it('should call multisigModule.processSignature', async () => {
-      await (instance as any).loadSignatures();
-
-      expect(multisigModuleStub.stubs.processSignature.calledTwice).to.be.true;
-
-      expect(
-        multisigModuleStub.stubs.processSignature.firstCall.args.length
-      ).to.be.deep.equal(1);
-      expect(
-        multisigModuleStub.stubs.processSignature.firstCall.args[0]
-      ).to.be.deep.equal({
-        signature: { signature: 'sig11' },
-        transaction: 'tr11',
-      });
-
-      expect(
-        multisigModuleStub.stubs.processSignature.secondCall.args.length
-      ).to.be.deep.equal(1);
-      expect(
-        multisigModuleStub.stubs.processSignature.secondCall.args[0]
-      ).to.be.deep.equal({
-        signature: { signature: 'sig22' },
-        transaction: 'tr22',
-      });
-    });
-
-    it('should call logger.warn if multisigModule.processSignature throw error', async () => {
-      const error = 'error';
-
-      multisigModuleStub.stubs.processSignature.rejects(error);
-      await (instance as any).loadSignatures();
-
-      expect(loggerStub.stubs.warn.calledTwice).to.be.true;
-
-      expect(loggerStub.stubs.warn.firstCall.args.length).to.be.equal(2);
-      expect(loggerStub.stubs.warn.firstCall.args[0]).to.be.equal(
-        'Cannot process multisig signature for tr11 '
-      );
-      expect(loggerStub.stubs.warn.firstCall.args[1]).to.be.instanceof(Error);
-      expect(loggerStub.stubs.warn.firstCall.args[1].name).to.be.deep.equal(
-        error
-      );
-
-      expect(loggerStub.stubs.warn.secondCall.args.length).to.be.equal(2);
-      expect(loggerStub.stubs.warn.secondCall.args[0]).to.be.equal(
-        'Cannot process multisig signature for tr22 '
-      );
-      expect(loggerStub.stubs.warn.secondCall.args[1]).to.be.instanceof(Error);
-      expect(loggerStub.stubs.warn.secondCall.args[1].name).to.be.deep.equal(
-        error
-      );
-    });
   });
 
   describe('.loadTransactions', () => {

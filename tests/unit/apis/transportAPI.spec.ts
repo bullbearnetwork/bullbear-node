@@ -121,29 +121,6 @@ describe('apis/transportAPI', () => {
     });
   });
 
-  describe('signatures()', () => {
-    it('should return an object with the property signatures', () => {
-      result = instance.signatures();
-      expect(result).to.deep.equal({
-        signatures: [
-          { transaction: '100', signatures: [1, 2, 3] },
-          { transaction: '102', signatures: [1, 2, 3] },
-        ],
-      });
-    });
-  });
-
-  describe('postSignatures', () => {
-    it('should call transportModule.receiveSignatures', async () => {
-      transportModuleStub.stubs.receiveSignatures.resolves(true);
-      const signatures = [{ transaction: 'transaction', signature: 'signature' }];
-      expect(await instance.postSignatures(signatures, undefined)).to.be.true;
-      expect(transportModuleStub.stubs.receiveSignatures.calledOnce).to.be.true;
-      expect(transportModuleStub.stubs.receiveSignatures.firstCall.args.length).to.be.equal(1);
-      expect(transportModuleStub.stubs.receiveSignatures.firstCall.args[0]).to.be.deep.equal(signatures);
-    });
-  });
-
   describe('transactions()', () => {
     it('should return an object with the property transactions', () => {
       result = instance.transactions();

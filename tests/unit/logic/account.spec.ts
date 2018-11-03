@@ -14,7 +14,6 @@ import { IAccountLogic } from '../../../src/ioc/interfaces/logic';
 import { AccountLogic } from '../../../src/logic/';
 import {
   Accounts2DelegatesModel,
-  Accounts2MultisignaturesModel,
   AccountsModel,
   RoundsModel
 } from '../../../src/models';
@@ -39,7 +38,6 @@ describe('logic/account', () => {
   let zSchemaStub: ZSchemaStub;
   let container: Container;
   let accounts2DelegatesModel: typeof Accounts2DelegatesModel;
-  let accounts2MultisigModel: typeof Accounts2MultisignaturesModel;
   let roundsModel: typeof RoundsModel;
   let accountsModel: typeof AccountsModel;
   beforeEach(() => {
@@ -52,7 +50,6 @@ describe('logic/account', () => {
     accountsModel           = container.get(Symbols.models.accounts);
     accounts2DelegatesModel = container.get(Symbols.models.accounts2Delegates);
     roundsModel             = container.get(Symbols.models.rounds);
-    accounts2MultisigModel  = container.get(Symbols.models.accounts2Multisignatures);
   });
 
   afterEach(() => {
@@ -255,8 +252,6 @@ describe('logic/account', () => {
     let dropStubs: { [s: string]: SinonStub } = {};
     beforeEach(() => {
       [Symbols.models.accounts,
-        Symbols.models.accounts2Multisignatures,
-        Symbols.models.accounts2U_Multisignatures,
         Symbols.models.accounts2Delegates,
         Symbols.models.accounts2U_Delegates,
         Symbols.models.rounds].forEach((s) => dropStubs[s] = sandbox.stub(container.get<any>(s), 'drop').resolves());
@@ -264,8 +259,6 @@ describe('logic/account', () => {
     it('should call .drop on all models', async () => {
       await account.removeTables();
       [Symbols.models.accounts,
-        Symbols.models.accounts2Multisignatures,
-        Symbols.models.accounts2U_Multisignatures,
         Symbols.models.accounts2Delegates,
         Symbols.models.accounts2U_Delegates,
         Symbols.models.rounds].forEach((s) => {

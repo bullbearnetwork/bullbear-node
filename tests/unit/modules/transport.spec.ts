@@ -9,7 +9,6 @@ import { SinonSandbox, SinonStub } from 'sinon';
 import { PostTransactionsRequest } from '../../../src/apis/requests/PostTransactionsRequest';
 import { PostBlocksRequest } from '../../../src/apis/requests/PostBlocksRequest';
 import { PeersListRequest } from '../../../src/apis/requests/PeersListRequest';
-import { PostSignaturesRequest } from '../../../src/apis/requests/PostSignaturesRequest';
 import { wait } from '../../../src/helpers';
 import { Symbols } from '../../../src/ioc/symbols';
 import { PeerState } from '../../../src/logic';
@@ -22,7 +21,6 @@ import {
   BroadcasterLogicStub,
   JobsQueueStub,
   LoggerStub,
-  MultisignaturesModuleStub,
   PeersLogicStub,
   PeersModuleStub,
   SequenceStub,
@@ -78,7 +76,6 @@ describe('src/modules/transport.ts', () => {
   let transactionLogic: TransactionLogicStub;
   let peersLogic: PeersLogicStub;
   let peersModule: PeersModuleStub;
-  let multisigModule: MultisignaturesModuleStub;
   let transactionModule: TransactionsModuleStub;
   let systemModule: SystemModuleStub;
 
@@ -99,7 +96,6 @@ describe('src/modules/transport.ts', () => {
     peersLogic       = container.get(Symbols.logic.peers);
 
     peersModule       = container.get(Symbols.modules.peers);
-    multisigModule    = container.get(Symbols.modules.multisignatures);
     transactionModule = container.get(Symbols.modules.transactions);
     systemModule      = container.get(Symbols.modules.system);
 
@@ -613,72 +609,6 @@ describe('src/modules/transport.ts', () => {
     });
   });
 
-  describe('onSignature', () => {
-
-    let broadcast;
-    let signature;
-
-    beforeEach(() => {
-      signature = { transaction: '1111111', signature: 'aaaabbbb' };
-      broadcast = true;
-      broadcasterLogic.enqueueResponse('maxRelays', false);
-      broadcasterLogic.enqueueResponse('enqueue', false);
-      (inst as any).appState = {get: () => 1000};
-      const p = new PostSignaturesRequest();
-      (inst as any).psrFactory = (a) => {
-        p.options = a;
-        return p;
-      };
-    });
-
-    it('should call broadcasterLogic.maxRelays', () => {
-      inst.onSignature(signature, broadcast);
-      expect(broadcasterLogic.stubs.maxRelays.calledOnce).to.be.true;
-      expect(broadcasterLogic.stubs.maxRelays.firstCall.args.length).to.be.equal(1);
-      expect(broadcasterLogic.stubs.maxRelays.firstCall.args[0]).to.be.deep.equal(signature);
-    });
-
-    it('should call broadcasterLogic.enqueue', async () => {
-      inst.onSignature(signature, broadcast);
-
-      expect(broadcasterLogic.stubs.enqueue.calledOnce).to.be.true;
-      expect(broadcasterLogic.stubs.enqueue.firstCall.args.length).to.be.equal(2);
-      expect(broadcasterLogic.stubs.enqueue.firstCall.args[0]).to.be.deep.equal({});
-      expect(broadcasterLogic.stubs.enqueue.firstCall.args[1].requestHandler).to.be.instanceOf(PostSignaturesRequest);
-      expect(broadcasterLogic.stubs.enqueue.firstCall.args[1].requestHandler.options).to.be.deep.equal({data: { signatures: [{
-        relays: 1,
-        signature: Buffer.from(signature.signature, 'hex'),
-        transaction: signature.transaction,
-      }] }});
-    });
-
-    it('should call io.sockets.emit', async () => {
-      inst.onSignature(signature, broadcast);
-
-      expect(io.sockets.emit.calledOnce).to.be.true;
-      expect(io.sockets.emit.firstCall.args.length).to.be.equal(2);
-      expect(io.sockets.emit.firstCall.args[0]).to.be.deep.equal('signature/change');
-      expect(io.sockets.emit.firstCall.args[1]).to.be.deep.equal(signature);
-    });
-
-    it('should not call broadcasterLogic.enqueue if broadcast is false', () => {
-      broadcast = false;
-
-      inst.onSignature(signature, broadcast);
-
-      expect(broadcasterLogic.stubs.enqueue.notCalled).to.be.true;
-    });
-
-    it('should not call broadcasterLogic.enqueue if this.broadcasterLogic.maxRelays returned true', () => {
-      broadcasterLogic.reset();
-      broadcasterLogic.enqueueResponse('maxRelays', true);
-
-      inst.onSignature(signature, broadcast);
-
-      expect(broadcasterLogic.stubs.enqueue.notCalled).to.be.true;
-    });
-  });
-
   describe('onUnconfirmedTransaction', () => {
 
     let broadcast;
@@ -838,64 +768,6 @@ describe('src/modules/transport.ts', () => {
       await inst.onNewBlock(block, true);
       expect(finished).to.be.false;
       await promise;
-    });
-  });
-
-  describe('receiveSignatures', () => {
-
-    let receiveSignatureStub: SinonStub;
-    let query;
-
-    beforeEach(() => {
-      query                = [{ transaction: 'transaction', signature: 'signature' }];
-      receiveSignatureStub = sandbox.stub(inst as any, 'receiveSignature');
-    });
-
-    it('should call receiveSignature', async () => {
-      await inst.receiveSignatures(query);
-
-      expect(receiveSignatureStub.calledOnce).to.be.true;
-      expect(receiveSignatureStub.firstCall.args.length).to.be.equal(1);
-      expect(receiveSignatureStub.firstCall.args[0]).to.be.deep.equal(query[0]);
-    });
-
-    it('should call logger.debug if receiveSignature throw error', async () => {
-      const error = new Error('error');
-      receiveSignatureStub.rejects(error);
-
-      await inst.receiveSignatures(query);
-
-      expect(logger.stubs.debug.calledOnce).to.be.true;
-      expect(logger.stubs.debug.firstCall.args.length).to.be.equal(2);
-      expect(logger.stubs.debug.firstCall.args[0]).to.be.equal(error);
-      expect(logger.stubs.debug.firstCall.args[1]).to.be.deep.equal(query[0]);
-    });
-  });
-
-  describe('receiveSignature', () => {
-
-    let signature;
-
-    beforeEach(() => {
-      signature = { transaction: 'transaction', signature: 'signature' };
-
-      multisigModule.enqueueResponse('processSignature', Promise.resolve());
-    });
-
-    it('should call multisigModule.processSignature', async () => {
-      await inst.receiveSignature(signature);
-
-      expect(multisigModule.stubs.processSignature.calledOnce).to.be.true;
-      expect(multisigModule.stubs.processSignature.firstCall.args.length).to.be.equal(1);
-      expect(multisigModule.stubs.processSignature.firstCall.args[0]).to.be.deep.equal(signature);
-    });
-
-    it('should throw error multisigModule.processSignature throw error', async () => {
-      const error = new Error('error');
-      multisigModule.reset();
-      multisigModule.enqueueResponse('processSignature', Promise.reject(error));
-
-      await  expect(inst.receiveSignature(signature)).to.be.rejectedWith('Error processing signature: error');
     });
   });
 

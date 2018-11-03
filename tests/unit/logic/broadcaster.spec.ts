@@ -11,7 +11,6 @@ import {
 import { createContainer } from '../../utils/containerCreator';
 import { constants } from './../../../src/helpers/';
 import { PostTransactionsRequest } from '../../../src/apis/requests/PostTransactionsRequest';
-import { PostSignaturesRequest } from '../../../src/apis/requests/PostSignaturesRequest';
 
 // tslint:disable no-unused-expression
 describe('logic/broadcaster', () => {
@@ -413,32 +412,6 @@ describe('logic/broadcaster', () => {
   describe('squashQueue', () => {
     let broadcasts;
     beforeEach(() => {
-      const ps1 = new PostSignaturesRequest();
-      ps1.options = {
-        data:
-          {
-            signature:
-              {
-                signature: Buffer.from('aaaa', 'hex'),
-                transaction: '111111',
-              },
-          },
-      } as any;
-      const ps2 = new PostSignaturesRequest();
-      ps2.options = {
-        data: {
-          signatures: [
-            {
-              signature  : Buffer.from('bbbb', 'hex'),
-              transaction: '222222',
-            },
-            {
-              signature  : Buffer.from('cccc', 'hex'),
-              transaction: '333333',
-            },
-          ],
-        },
-      } as any;
 
       const pt1   = new PostTransactionsRequest();
       pt1.options = {
@@ -470,11 +443,7 @@ describe('logic/broadcaster', () => {
       } as any;
 
       broadcasts  = [{
-        options: { api: 'type1', requestHandler: ps1 },
-      }, {
         options: { api: 'type2', requestHandler: pt1 },
-      }, {
-        options: { api: 'type1', requestHandler: ps2 },
       }, {
         options: { api: 'type2', requestHandler: pt2 },
       }];
@@ -483,34 +452,6 @@ describe('logic/broadcaster', () => {
     it('should return the expected result', () => {
       const result = (instance as any).squashQueue(broadcasts);
       expect(result).to.be.deep.equal([{
-          options: {
-            immediate: false,
-            requestHandler: {
-              method: 'POST',
-              options: {
-                data: {
-                  signature: null,
-                  signatures: [
-                    {
-                      signature: Buffer.from('aaaa', 'hex'),
-                      transaction: '111111',
-                    },
-                    {
-                      signature  : Buffer.from('bbbb', 'hex'),
-                      transaction: '222222',
-                    },
-                    {
-                      signature  : Buffer.from('cccc', 'hex'),
-                      transaction: '333333',
-                    },
-                  ],
-                },
-              },
-              supportsProtoBuf: true,
-            },
-          },
-        },
-        {
           options: {
             immediate: false,
             requestHandler: {

@@ -726,13 +726,6 @@ describe('AppManager', () => {
         },
       ]);
 
-      expect(containerStub.bindings[Symbols.logic.transactions.createmultisig]).to.be.deep.equal([
-        {
-          inSingletonScope: true,
-          to              : 'MultiSignatureTransaction',
-        },
-      ]);
-
       expect(containerStub.bindings[Symbols.logic.transactions.delegate]).to.be.deep.equal([
         {
           inSingletonScope: true,
@@ -847,13 +840,6 @@ describe('AppManager', () => {
         {
           inSingletonScope: true,
           to              : 'LoaderModule',
-        },
-      ]);
-
-      expect(containerStub.bindings[Symbols.modules.multisignatures]).to.be.deep.equal([
-        {
-          inSingletonScope: true,
-          to              : 'MultisignaturesModule',
         },
       ]);
 
