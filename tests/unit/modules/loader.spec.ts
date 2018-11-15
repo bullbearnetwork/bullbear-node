@@ -25,7 +25,6 @@ import {
   IAppStateStub,
   JobsQueueStub,
   LoggerStub,
-  MultisignaturesModuleStub,
   PeersLogicStub,
   PeersModuleStub,
   RoundsLogicStub,

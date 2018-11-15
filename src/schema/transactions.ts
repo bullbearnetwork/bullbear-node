@@ -9,14 +9,14 @@ export default {
       'and:blockId'         : {
         type     : 'string',
         format   : 'id',
-        minLength: 1,
-        maxLength: 20,
+        minLength: 33,
+        maxLength: 34,
       },
       blockId               : {
         type     : 'string',
         format   : 'id',
-        minLength: 1,
-        maxLength: 20,
+        minLength: 33,
+        maxLength: 34,
       },
       'and:type'            : {
         type   : 'integer',
@@ -31,14 +31,14 @@ export default {
       'and:senderId'        : {
         type     : 'string',
         format   : 'address',
-        minLength: 1,
-        maxLength: 22,
+        minLength: 35,
+        maxLength: 36,
       },
       senderId              : {
         type     : 'string',
         format   : 'address',
-        minLength: 1,
-        maxLength: 22,
+        minLength: 35,
+        maxLength: 36,
       },
       'and:senderPublicKey' : {
         type  : 'string',
@@ -51,14 +51,14 @@ export default {
       'and:recipientId'     : {
         type     : 'string',
         format   : 'address',
-        minLength: 1,
-        maxLength: 22,
+        minLength: 35,
+        maxLength: 36,
       },
       recipientId           : {
         type     : 'string',
         format   : 'address',
-        minLength: 1,
-        maxLength: 22,
+        minLength: 35,
+        maxLength: 36,
       },
       senderPublicKeys      : {
         type    : 'array',
@@ -74,8 +74,8 @@ export default {
         items   : {
           type     : 'string',
           format   : 'address',
-          minLength: 1,
-          maxLength: 22,
+          minLength: 35,
+          maxLength: 36,
         },
       },
       recipientIds          : {
@@ -84,8 +84,8 @@ export default {
         items   : {
           type     : 'string',
           format   : 'address',
-          minLength: 1,
-          maxLength: 22,
+          minLength: 35,
+          maxLength: 36,
         },
       },
       'and:fromHeight'      : {
@@ -187,8 +187,8 @@ export default {
       id: {
         type     : 'string',
         format   : 'id',
-        minLength: 1,
-        maxLength: 20,
+        minLength: 33,
+        maxLength: 34,
       },
     },
     required  : ['id'],
@@ -200,8 +200,8 @@ export default {
       id: {
         type     : 'string',
         format   : 'id',
-        minLength: 1,
-        maxLength: 20,
+        minLength: 33,
+        maxLength: 34,
       },
     },
     required  : ['id'],
@@ -217,8 +217,8 @@ export default {
       address        : {
         type     : 'string',
         format   : 'address',
-        minLength: 1,
-        maxLength: 22,
+        minLength: 35,
+        maxLength: 36,
       },
     },
   },
@@ -239,9 +239,8 @@ export default {
       recipientId             : {
         type     : 'string',
         format   : 'address',
-        minLength: 1,
-
-        maxLength: 22,
+        minLength: 35,
+        maxLength: 36,
       },
       publicKey               : {
         type  : 'string',

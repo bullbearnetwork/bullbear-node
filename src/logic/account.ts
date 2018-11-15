@@ -416,7 +416,7 @@ export class AccountLogic implements IAccountLogic {
   }
 
   public assertValidAddress(address: string): void {
-    if (!this.schema.validate({ type: 'string', format: 'address' }, address)) {
+    if (!this.schema.validate(address, { type: 'string', format: 'address' })) {
       throw new Error('Invalid Address');
     }
 

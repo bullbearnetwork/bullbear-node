@@ -32,7 +32,6 @@ import BlocksModuleStub from '../stubs/modules/BlocksModuleStub';
 import { ForgeModuleStub } from '../stubs/modules/ForgeModuleStub';
 import { ForkModuleStub } from '../stubs/modules/ForkModuleStub';
 import { LoaderModuleStub } from '../stubs/modules/LoaderModuleStub';
-import MultisignaturesModuleStub from '../stubs/modules/MultisignaturesModuleStub';
 import { RoundsModuleStub } from '../stubs/modules/RoundsModuleStub';
 import TransportModuleStub from '../stubs/modules/TransportModuleStub';
 import SocketIOStub from '../stubs/utils/SocketIOStub';

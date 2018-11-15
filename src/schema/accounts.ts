@@ -19,8 +19,8 @@ export default {
       address: {
         type     : 'string',
         format   : 'address',
-        minLength: 1,
-        maxLength: 22,
+        minLength: 35,
+        maxLength: 36,
       },
     },
     required  : ['address'],
@@ -32,8 +32,8 @@ export default {
       address: {
         type     : 'string',
         format   : 'address',
-        minLength: 1,
-        maxLength: 22,
+        minLength: 35,
+        maxLength: 36,
       },
     },
     required  : ['address'],
@@ -57,8 +57,8 @@ export default {
       address: {
         type     : 'string',
         format   : 'address',
-        minLength: 1,
-        maxLength: 22,
+        minLength: 35,
+        maxLength: 36,
       },
     },
     required  : ['address'],
@@ -100,8 +100,8 @@ export default {
       address  : {
         type     : 'string',
         format   : 'address',
-        minLength: 1,
-        maxLength: 22,
+        minLength: 35,
+        maxLength: 36,
       },
       publicKey: {
         type  : 'string',

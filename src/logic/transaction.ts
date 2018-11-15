@@ -7,17 +7,7 @@ import * as _ from 'lodash';
 import * as RIPEMD160 from 'ripemd160';
 import { Model } from 'sequelize-typescript';
 import z_schema from 'z-schema';
-import {
-  BigNum,
-  catchToLoggerAndRemapError,
-  constants,
-  Ed,
-  ExceptionsList,
-  ExceptionsManager,
-  IKeypair,
-  ILogger,
-  Slots
-} from '../helpers/';
+import { BigNum, constants, Ed, ExceptionsList, ExceptionsManager, IKeypair, ILogger, Slots } from '../helpers/';
 import { RunThroughExceptions } from '../helpers/decorators/exceptions';
 import { IAccountLogic, IRoundsLogic, ITransactionLogic, VerificationType } from '../ioc/interfaces/logic/';
 import { Symbols } from '../ioc/symbols';
@@ -25,8 +15,13 @@ import { AccountsModel, TransactionsModel } from '../models/';
 import txSchema from '../schema/logic/transaction';
 import { DBBulkCreateOp, DBOp } from '../types/genericTypes';
 import { SignedAndChainedBlockType, SignedBlockType } from './block';
-import { BaseTransactionType, IBaseTransaction,
-         IBytesTransaction, IConfirmedTransaction, ITransportTransaction } from './transactions/';
+import {
+  BaseTransactionType,
+  IBaseTransaction,
+  IBytesTransaction,
+  IConfirmedTransaction,
+  ITransportTransaction
+} from './transactions/';
 
 @injectable()
 export class TransactionLogic implements ITransactionLogic {
@@ -94,12 +89,7 @@ export class TransactionLogic implements ITransactionLogic {
    */
   public getId(tx: IBaseTransaction<any>): string {
     const hash = this.getHash(tx);
-    const temp = Buffer.alloc(8);
-    for (let i = 0; i < 8; i++) {
-      temp[i] = hash[7 - i];
-    }
-
-    return BigNum.fromBuffer(temp).toString();
+    return bs58check.encode(new RIPEMD160().update(hash).digest());
   }
 
   /**
@@ -144,8 +134,8 @@ export class TransactionLogic implements ITransactionLogic {
 
     if (tx.recipientId) {
       const addr = Buffer.concat([
-        Buffer.from('42424e', 'hex'), // BBN
-        bs58check.decode(tx.recipientId.substr(3)),
+        bs58check.decode(tx.recipientId.slice(0, -3)),
+        Buffer.from(tx.recipientId.slice(-3), 'utf8'), // BBN
       ]);
       bb.append(addr);
     } else {
@@ -187,12 +177,12 @@ export class TransactionLogic implements ITransactionLogic {
 
   // tslint:disable-next-line
   public fromBytes(tx: IBytesTransaction): IBaseTransaction<any> & { relays: number } {
-    const bb = ByteBuffer.wrap(tx.bytes, 'binary', true);
-    const type = bb.readByte(0);
-    const timestamp = bb.readUint32(1);
-    const senderPublicKey = tx.bytes.slice(5, 37);
+    const bb               = ByteBuffer.wrap(tx.bytes, 'binary', true);
+    const type             = bb.readByte(0);
+    const timestamp        = bb.readUint32(1);
+    const senderPublicKey  = tx.bytes.slice(5, 37);
     let requesterPublicKey = null;
-    let offset = 37;
+    let offset             = 37;
 
     // Read requesterPublicKey if available
     if (tx.hasRequesterPublicKey) {
@@ -203,7 +193,7 @@ export class TransactionLogic implements ITransactionLogic {
     // RecipientId is valid only if it's not 8 bytes with 0 value
     const recipientIdBytes = tx.bytes.slice(offset, offset + 8);
     offset += 8;
-    let recipientValid = false;
+    let recipientValid     = false;
     for (let i = 0; i < 8; i++) {
       if (recipientIdBytes.readUInt8(i) !== 0) {
         recipientValid = true;
@@ -224,21 +214,21 @@ export class TransactionLogic implements ITransactionLogic {
     const signSignature = tx.bytes.slice(bb.buffer.length - 64, bb.buffer.length);
 
     // All remaining bytes between amount and signSignature (or signature) are the asset.
-    let assetBytes = null;
+    let assetBytes               = null;
     const optionalElementsLength = (tx.hasRequesterPublicKey ? 32 : 0) + (tx.hasSignSignature ? 64 : 0);
-    const assetLength = bb.buffer.length - ( 1 + 4 + 32 + 8 + 8 + 64 + optionalElementsLength);
+    const assetLength            = bb.buffer.length - (1 + 4 + 32 + 8 + 8 + 64 + optionalElementsLength);
     if (assetLength < 0) {
       throw new Error('Buffer length does not match expected sequence');
     } else if (assetLength > 0) {
       assetBytes = tx.bytes.slice(offset, offset + assetLength);
     }
 
-    const transaction: IBaseTransaction<any> & { relays: number } =  {
-      amount: amount.toNumber(),
-      fee: tx.fee,
-      id: this.getIdFromBytes(tx.bytes),
+    const transaction: IBaseTransaction<any> & { relays: number } = {
+      amount  : amount.toNumber(),
+      fee     : tx.fee,
+      id      : this.getIdFromBytes(tx.bytes),
       recipientId,
-      relays: tx.relays,
+      relays  : tx.relays,
       requesterPublicKey,
       senderId: this.accountLogic.generateAddressByPublicKey(senderPublicKey),
       senderPublicKey,
@@ -275,6 +265,7 @@ export class TransactionLogic implements ITransactionLogic {
       throw new Error(`Unknown transaction type ${type}`);
     }
   }
+
   /**
    * Checks if balanceKey is less than amount for sender
    */
@@ -572,8 +563,8 @@ export class TransactionLogic implements ITransactionLogic {
       return [];
     }
     const bulkCreate: DBBulkCreateOp<TransactionsModel> = {
-      model: this.TransactionsModel,
-      type: 'bulkCreate',
+      model : this.TransactionsModel,
+      type  : 'bulkCreate',
       values: txs.map((tx) => {
         this.assertKnownTransactionType(tx.type);
         const senderPublicKey    = tx.senderPublicKey;
@@ -601,7 +592,7 @@ export class TransactionLogic implements ITransactionLogic {
         };
       }),
     };
-    const subOps: Array<DBOp<any>> = txs
+    const subOps: Array<DBOp<any>>                      = txs
       .map((tx) => this.types[tx.type].dbSave(tx, blockId, height))
       .filter((op) => op);
 
@@ -620,7 +611,7 @@ export class TransactionLogic implements ITransactionLogic {
   public objectNormalize(tx: IConfirmedTransaction<any>): IConfirmedTransaction<any>;
   // tslint:disable-next-line max-line-length
   public objectNormalize(tx2: IBaseTransaction<any> | ITransportTransaction<any> | IConfirmedTransaction<any>): IBaseTransaction<any> | IConfirmedTransaction<any> {
-    const tx = {... tx2};
+    const tx = { ...tx2 };
     this.assertKnownTransactionType(tx.type);
     for (const key in tx) {
       if (tx[key] === null || typeof(tx[key]) === 'undefined') {
