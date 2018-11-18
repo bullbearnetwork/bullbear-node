@@ -421,6 +421,6 @@ export class AccountLogic implements IAccountLogic {
     }
 
     // It throws if not valid.
-    bs58check.decode(address.substr(3));
+    bs58check.decode(address.slice(0, -3));
   }
 }

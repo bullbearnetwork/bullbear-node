@@ -1,18 +1,17 @@
 {
-    "port": 5566,
+    "port": 9999,
     "address": "0.0.0.0",
-    "version": "1.2.0t",
+    "version": "1.2.0",
     "fileLogLevel": "info",
-    "logFileName": "logs/rise-testnet.log",
-    "consoleLogLevel": "info",
+    "logFileName": "logs/bbn-testnet.log",
+    "consoleLogLevel": "debug",
     "trustProxy": false,
-    "topAccounts": false,
     "cacheEnabled": false,
     "db": {
         "host": "localhost",
         "port": 5432,
-        "database": "rise_testnet_db",
-        "user": "rise",
+        "database": "test",
+        "user": "test",
         "password": "password",
         "poolSize": 95,
         "poolIdleTimeout": 30000,
@@ -23,17 +22,15 @@
     },
     "redis": {
         "host": "127.0.0.1",
-        "port": 6380,
+        "port": 6379,
         "db": 0,
         "password": null
     },
     "api": {
         "enabled": true,
         "access": {
-            "public": false,
-            "whiteList": [
-                "127.0.0.1"
-            ]
+            "public": true,
+            "whiteList": ["127.0.0.1"]
         },
         "restrictedWhiteList": [ "127.0.0.1" ],
         "options": {
@@ -48,23 +45,14 @@
     "peers": {
         "enabled": true,
         "banTime": 90000,
-        "list": [
-            {
-                "ip": "45.63.91.77",
-                "port": 5566
-            },
-            {
-                "ip": "108.61.99.202",
-                "port": 5566
-            },
-            {
-                "ip": "194.135.95.105",
-                "port": 5566
-            }
-        ],
+        "list": [{
+            "ip": "127.0.0.1",
+            "port": 9999
+        }],
         "access": {
             "blackList": []
         },
+        "restrictedWhiteList": [ "127.0.0.1" ],
         "options": {
             "limits": {
                 "max": 0,
@@ -87,10 +75,12 @@
     },
     "forging": {
         "force": false,
-        "secret": [],
+        "secret": [
+        ],
         "access": {
             "whiteList": [
-                "127.0.0.1"
+                "127.0.0.1",
+                "::ffff:127.0.0.1"
             ]
         }
     },
@@ -98,5 +88,5 @@
         "verifyOnLoading": false,
         "loadPerIteration": 5000
     },
-    "nethash": "e90d39ac200c495b97deb6d9700745177c7fc4aa80a404108ec820cbeced054c"
+    "nethash": "16483d0141ad9b0e70b042d2605015d7820e9d2fdb96a054a971c9c4a4685679"
 }

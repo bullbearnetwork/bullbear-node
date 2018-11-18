@@ -1,5 +1,5 @@
 {
-    "port": 5555,
+    "port": 9997,
     "address": "0.0.0.0",
     "version": "1.2.0",
     "fileLogLevel": "info",
