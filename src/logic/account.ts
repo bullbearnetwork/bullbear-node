@@ -412,7 +412,7 @@ export class AccountLogic implements IAccountLogic {
         : new Buffer(publicKey, 'hex')
       )
       .digest();
-    return `${bs58check.encode(new RIPEMD160().update(hash).digest())}BBN`;
+    return `${bs58check.encode(new RIPEMD160().update(hash).digest())}${this.constants.addressSuffix}`;
   }
 
   public assertValidAddress(address: string): void {

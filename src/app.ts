@@ -55,6 +55,7 @@ program
   .parse(process.argv);
 
 process.env.NETWORK = process.env.NETWORK || program.net;
+constantsType.addressSuffix = process.env.NETWORK === 'testnet' ? 'BBT' : 'BBN';
 // tslint:disable-next-line
 const genesisBlock: SignedAndChainedBlockType = require(`../etc/${program.net}/genesisBlock.json`);
 
