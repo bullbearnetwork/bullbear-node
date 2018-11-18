@@ -123,9 +123,8 @@ export class TransportV2API {
     // Remove quotes
       .replace(/['"]+/g, '')
       // Separate by comma into an array
-      .split(',')
-      // Reject any non-numeric values
-      .filter((id) => /^[0-9]+$/.test(id));
+      .split(',');
+
     if (excapedIds.length === 0 || excapedIds.length > 10) {
       this.peersModule.remove(req.ip, parseInt(req.headers.port as string, 10));
       throw new APIError('Invalid block id sequence', 200);

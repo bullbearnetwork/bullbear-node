@@ -299,7 +299,7 @@ export class BlockLogic implements IBlockLogic {
     if (block.previousBlock) {
       bb.append(bs58check.decode(block.previousBlock));
     } else {
-      bb.append(new Buffer(23).fill(0));
+      bb.append(new Buffer(20).fill(0));
     }
 
     bb.writeInt(block.numberOfTransactions);
@@ -348,26 +348,16 @@ export class BlockLogic implements IBlockLogic {
     const version = bb.readInt(0);
     const timestamp = bb.readInt(4);
 
-    // PreviousBlock is valid only if it's not 8 bytes with 0 value
-    const previousIdBytes = blk.bytes.slice(8, 16);
-    let previousValid = false;
-    for (let i = 0; i < 8; i++) {
-      if (previousIdBytes.readUInt8(i) !== 0) {
-        previousValid = true;
-        break;
-      }
-    }
-    const previousBlock = previousValid ?
-      BigNum.fromBuffer(previousIdBytes).toString() : null;
+    const previousBlock = bs58check.encode(blk.bytes.slice(8, 28));
 
-    const numberOfTransactions = bb.readInt(16);
-    const totalAmount = bb.readLong(20).toNumber();
-    const totalFee = bb.readLong(28).toNumber();
-    const reward = bb.readLong(36).toNumber();
-    const payloadLength = bb.readInt(44);
-    const payloadHash = blk.bytes.slice(48, 80);
-    const generatorPublicKey = blk.bytes.slice(80, 112);
-    const blockSignature = blk.bytes.length === 176 ? blk.bytes.slice(112, 176) : null;
+    const numberOfTransactions = bb.readInt(28);
+    const totalAmount = bb.readLong(32).toNumber();
+    const totalFee = bb.readLong(40).toNumber();
+    const reward = bb.readLong(48).toNumber();
+    const payloadLength = bb.readInt(56);
+    const payloadHash = blk.bytes.slice(60, 60 + 32 /*92*/);
+    const generatorPublicKey = blk.bytes.slice(92, 92 + 32 /*124*/);
+    const blockSignature = blk.bytes.slice(124, 124 + 64);
     const id = this.getIdFromBytes(blk.bytes);
     const transactions = blk.transactions.map((tx) => {
       const baseTx = this.transaction.fromBytes(tx);

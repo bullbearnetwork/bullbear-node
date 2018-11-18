@@ -45,10 +45,10 @@
     "peers": {
         "enabled": true,
         "banTime": 90000,
-        "list": [{
-            "ip": "127.0.0.1",
-            "port": 9999
-        }],
+        "list": [
+            { "ip": "185.101.107.238", "port": 9999 }
+
+        ],
         "access": {
             "blackList": []
         },

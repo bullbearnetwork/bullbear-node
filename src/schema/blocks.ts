@@ -13,8 +13,8 @@ export default {
       id: {
         type     : 'string',
         format   : 'id',
-        minLength: 1,
-        maxLength: 20,
+        minLength: 32,
+        maxLength: 33,
       },
     },
     required  : ['id'],
@@ -59,8 +59,8 @@ export default {
       previousBlock     : {
         type     : 'string',
         format   : 'id',
-        minLength: 1,
-        maxLength: 20,
+        minLength: 32,
+        maxLength: 33,
       },
       height            : {
         type   : 'integer',
@@ -105,16 +105,16 @@ export default {
       id           : {
         type     : 'string',
         format   : 'id',
-        minLength: 1,
-        maxLength: 20,
+        minLength: 32,
+        maxLength: 33,
       },
       previousBlock: {
         anyOf: [
           {
             type     : 'string',
             format   : 'id',
-            minLength: 1,
-            maxLength: 20,
+            minLength: 32,
+            maxLength: 33,
           },
           // genesis block has null as previousBlock.
           {type: 'null'},

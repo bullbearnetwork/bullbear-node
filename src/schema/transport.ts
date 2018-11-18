@@ -65,8 +65,8 @@ export default {
       lastBlockId: {
         type     : 'string',
         format   : 'id',
-        minLength: 1,
-        maxLength: 20,
+        minLength: 32,
+        maxLength: 33,
       },
     },
   },
@@ -101,8 +101,8 @@ export default {
       transaction: {
         type     : 'string',
         format   : 'id',
-        minLength: 1,
-        maxLength: 20,
+        minLength: 32,
+        maxLength: 33,
       },
       signature  : {
         type  : 'string',
