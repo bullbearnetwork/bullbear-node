@@ -50,7 +50,7 @@ export default {
   blockTime                    : 15,
   blockReceiptTimeOut          : 15 * 2, // 2 blocks
   confirmationLength           : 77,
-  addressSuffix                : 'BBN',
+  addressSuffix                : process.env.NETWORK === 'testnet' ? 'BBT' : 'BBN',
   epochTime                    : new Date(Date.UTC(2018, 9, 1, 0, 0, 0, 0)),
   minVersion                   : [
   ],
@@ -83,7 +83,7 @@ export default {
     // Mainnet
     'a7594caee74706f85193f1848f099fe3d939e87169437fb506b7a30ebe987565',
     // Testnet
-    'e90d39ac200c495b97deb6d9700745177c7fc4aa80a404108ec820cbeced054c',
+    '42cea9d13097437aedb1b0fdd587e18c6e51c8761d144bb36316a1c5ae646efd',
   ],
   numberLength                 : 100000000,
   requestLength                : 104,

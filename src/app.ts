@@ -54,6 +54,7 @@ program
   })
   .parse(process.argv);
 
+process.env.NETWORK = process.env.NETWORK || program.net;
 // tslint:disable-next-line
 const genesisBlock: SignedAndChainedBlockType = require(`../etc/${program.net}/genesisBlock.json`);
 
