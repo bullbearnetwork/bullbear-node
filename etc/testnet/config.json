@@ -4,7 +4,7 @@
     "version": "1.2.0",
     "fileLogLevel": "info",
     "logFileName": "logs/bbn-testnet.log",
-    "consoleLogLevel": "debug",
+    "consoleLogLevel": "info",
     "trustProxy": false,
     "cacheEnabled": false,
     "db": {

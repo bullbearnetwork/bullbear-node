@@ -191,18 +191,12 @@ export class TransactionLogic implements ITransactionLogic {
     }
 
     // RecipientId is valid only if it's not 8 bytes with 0 value
-    const recipientIdBytes = tx.bytes.slice(offset, offset + 8);
-    offset += 8;
-    let recipientValid     = false;
-    for (let i = 0; i < 8; i++) {
-      if (recipientIdBytes.readUInt8(i) !== 0) {
-        recipientValid = true;
-        break;
-      }
-    }
-    const recipientId = recipientValid ?
-      BigNum.fromBuffer(recipientIdBytes).toString() + 'R' : null;
+    const recipientIdBytes = tx.bytes.slice(offset, offset + 23);
+    offset += 23;
+    const recipientId = `${bs58check.encode(recipientIdBytes.slice(0, 20))}${recipientIdBytes.slice(20, 23).toString('utf8')}`;
 
+    const fee    = bb.readLong(offset);
+    offset += 8;
     const amount = bb.readLong(offset);
     offset += 8;
 
@@ -225,7 +219,7 @@ export class TransactionLogic implements ITransactionLogic {
 
     const transaction: IBaseTransaction<any> & { relays: number } = {
       amount  : amount.toNumber(),
-      fee     : tx.fee,
+      fee     : fee.toNumber(),
       id      : this.getIdFromBytes(tx.bytes),
       recipientId,
       relays  : tx.relays,
