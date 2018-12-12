@@ -1,16 +1,8 @@
 ## BBN-node version 1.2.0
 
-# RISE
+# BBN
  
-## Installation
-
-An automatic install script for Ubuntu is available.
-
-### Wiki 
-
-For detailed information on node installation and management please refer to the [wiki of this repository](https://github.com/RiseVision/rise-node/wiki).
-
-### Quick start bbn installation (Mainnet)
+## Quick start bbn installation (Mainnet)
 
 First, perform some basic checks:
 
@@ -18,37 +10,20 @@ First, perform some basic checks:
 - Your user will need sudo privileges, though
 - PostgresSQL must **not** be installed on your server
 
+Download the package from [release page](https://github.com/bullbearnetwork/bullbear-node/releases):
+
 Then go home:
 
 ```
 cd $HOME
+mkdir bbn
+tar -xf bbn.tar.gz -C bbn
+cd bbn
+./manager start all
 ```
 
-Download the installer:
-
-```
-wget https://raw.githubusercontent.com/bbnVision/rise-build/master/scripts/install.sh
-```
-
-Install bbn:
-```
-bash install.sh install -r mainnet -u https://downloads.rise.vision/core/mainnet/latest.tar.gz
-```
-
-The installer will start the node automatically if installation was successful.
-
-(Optional) Fast sync from a snapshot
-
-```
-cd rise
-wget https://downloads.rise.vision/snapshots/mainnet/latest -O latestsnap.gz
-./manager.sh restoreBackup latestsnap.gz
-```
 
 ## Basic node management
-
-Installer will create a `rise` folder in your homedir. Make sure to `cd` to this dir when managing your node.
-
 
 Check the status of your node with:
 ```
@@ -83,21 +58,8 @@ And finally restart your node to apply the changes:
 ./manager.sh reload node
 ```
 
-### Quick start bbn installation (Testnet) 
-The same as above, only the install step is different:
-```
-bash install.sh install -r testnet -u https://downloads.rise.vision/core/testnet/latest.tar.gz
-```
-
-
-(Optional) Fast sync from a snapshot
-
-```
-wget https://downloads.rise.vision/snapshots/testnet/latest -O latestsnap.gz
-./manager.sh restoreBackup latestsnap.gz
-```
-
 ## Authors
+- Bull Bear Team <info@bullbear.network>
 - Andrea B. <vekexasia+crypto@gmail.com>
 - Jan <lepetitjan@icloud.com>
 - Mariusz Serek <mariusz@serek.net>
@@ -114,7 +76,8 @@ wget https://downloads.rise.vision/snapshots/testnet/latest -O latestsnap.gz
 
 ## License
 
-Copyright © 2017 bbn<br>
+Copyright © 2018-2019 bull bear network<br>
+Copyright © 2017-2018 RISE<br>
 Copyright © 2016-2017 Shift<br>  
 Copyright © 2016-2017 Lisk Foundation
 
@@ -128,7 +91,7 @@ You should have received a copy of the [GNU General Public License](https://gith
 
 This program also incorporates work previously released with lisk `0.7.0` (and earlier) versions under the [MIT License](https://opensource.org/licenses/MIT). To comply with the requirements of that license, the following permission notice, applicable to those parts of the code only, is included below:
 
-Copyright © 2017 bbn<br>
+Copyright © 2017 RISE<br>
 Copyright © 2016-2017 Shift<br>
 Copyright © 2016-2017 Lisk Foundation<br>  
 Copyright © 2015 Crypti
