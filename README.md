@@ -1,4 +1,4 @@
-## BBN-node version 1.2.0
+## BBN-node version 1.2.1
 
 # BBN
  
