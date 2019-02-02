@@ -193,7 +193,7 @@ export class TransactionLogic implements ITransactionLogic {
     // RecipientId is valid only if it's not 8 bytes with 0 value
     const recipientIdBytes = tx.bytes.slice(offset, offset + 23);
     offset += 23;
-    const recipientId = `${bs58check.encode(recipientIdBytes.slice(0, 20))}${recipientIdBytes.slice(20, 23).toString('utf8')}`;
+    const recipientId = type === 2 ? null : `${bs58check.encode(recipientIdBytes.slice(0, 20))}${recipientIdBytes.slice(20, 23).toString('utf8')}`;
 
     const fee    = bb.readLong(offset);
     offset += 8;
@@ -210,7 +210,7 @@ export class TransactionLogic implements ITransactionLogic {
     // All remaining bytes between amount and signSignature (or signature) are the asset.
     let assetBytes               = null;
     const optionalElementsLength = (tx.hasRequesterPublicKey ? 32 : 0) + (tx.hasSignSignature ? 64 : 0);
-    const assetLength            = bb.buffer.length - (1 + 4 + 32 + 8 + 8 + 64 + optionalElementsLength);
+    const assetLength            = bb.buffer.length - (1 + 4 + 32 + 8 + 8 + 23 + 64 + optionalElementsLength);
     if (assetLength < 0) {
       throw new Error('Buffer length does not match expected sequence');
     } else if (assetLength > 0) {
