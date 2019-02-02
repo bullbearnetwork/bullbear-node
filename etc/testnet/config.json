@@ -1,7 +1,7 @@
 {
     "port": 9999,
     "address": "0.0.0.0",
-    "version": "1.2.0",
+    "version": "1.2.2",
     "fileLogLevel": "info",
     "logFileName": "logs/bbn-testnet.log",
     "consoleLogLevel": "info",
