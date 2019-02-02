@@ -111,6 +111,10 @@ export abstract class BaseRequest<Out, In> implements IAPIRequest<Out, In> {
     let error: { success: false, error: string };
     try {
       error = this.protoBufHelper.decode(res.body, 'APIError');
+      const errChunk = error.error.substr(0, 5);
+      if (errChunk.length > 0 && !errChunk.match(/^[ -~]+$/)) {
+        error = undefined;
+      }
     } catch (e) {
       // NOOP;
     }
